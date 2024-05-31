@@ -1,0 +1,23 @@
+name: "GitGuardian Shield Action"
+description: "Scan commits for secrets and other issues."
+author: GitGuardian <support@gitguardian.com>
+
+inputs:
+  args:
+    description: |
+      Arguments to pass to `ggshield secret scan`.
+
+      [`ggshield secret scan` reference](https://docs.gitguardian.com/ggshield-docs/getting-started).
+    required: false
+branding:
+  icon: "shield"
+  color: "blue"
+runs:
+  using: "docker"
+  image: "docker://gitguardian/ggshield:v1.28.0"
+  entrypoint: "/bin/bash"
+  args:
+    - -c
+    - |
+      git config --global --add safe.directory "$PWD" \
+      & ggshield secret scan path --recursive --yes ${{ inputs.args }} .
